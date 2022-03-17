@@ -1,10 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
-// eslint-disable-next-line import/extensions
-import AuthorizationComponent from '../components/AuthorizationComponent';
-
-// eslint-disable-next-line import/extensions
-import ChatRoom from '../components/ChatRoom';
+import AuthorizationComponent from '../components/AuthorizationComponent.vue';
+import ChatRoom from '../components/ChatRoom.vue';
 
 const routes = [
   {

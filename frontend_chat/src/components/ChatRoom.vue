@@ -68,8 +68,7 @@
 <script>
 import { defineComponent } from 'vue';
 import { io } from 'socket.io-client';
-// eslint-disable-next-line import/extensions
-import MessageComponent from './MessageComponent';
+import MessageComponent from './MessageComponent.vue';
 
 export default defineComponent({
   name: 'ChatRoom',

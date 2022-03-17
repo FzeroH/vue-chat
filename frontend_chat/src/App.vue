@@ -5,10 +5,8 @@
 <script>
 
 import { defineComponent } from 'vue';
-// eslint-disable-next-line import/extensions
-import ChatRoom from './components/ChatRoom';
-// eslint-disable-next-line import/extensions
-import AuthorizationComponent from './components/AuthorizationComponent';
+import ChatRoom from './components/ChatRoom.vue';
+import AuthorizationComponent from './components/AuthorizationComponent.vue';
 
 export default defineComponent({
   name: 'App',

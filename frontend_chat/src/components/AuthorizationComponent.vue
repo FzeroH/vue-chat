@@ -1,35 +1,34 @@
 <template>
   <form>
     <label for="user-name">Имя пользователя</label>
-    <input type="text" id="user-name" v-model="username">
+    <input type="text" id="user-name" v-model="authState.username">
     <label for="room-id">Номер комнаты</label>
-    <input type="text" id="room-id" v-model="roomId">
-    <button type="button" @click="login(username,roomId)">Войти</button>
+    <input type="text" id="room-id" v-model="authState.roomId">
+    <button type="button" @click="login">Войти</button>
   </form>
 </template>
 
 <script>
 import { defineComponent, ref } from 'vue';
 import io from 'socket.io-client';
-import { useRouter } from '../router';
+import { useRouter } from 'vue-router';
 
 export default defineComponent({
   name: 'AuthorizationComponent',
   setup() {
-    const username = ref('');
-    const roomId = ref('');
+    const authState = ref({
+      username: '',
+      roomId: '',
+    });
+
     const url = 'http://localhost:8080';
     const router = useRouter();
     const socket = io(url, {
       reconnectionDelay: 5000,
     });
     // eslint-disable-next-line no-shadow
-    const login = (username, roomId) => {
-      const userData = {
-        username,
-        roomId,
-      };
-      socket.emit('login', userData, (data) => {
+    const login = () => {
+      socket.emit('login', authState.value, (data) => {
         if (typeof data === 'string') {
           // eslint-disable-next-line no-console
           console.log(data);
@@ -41,7 +40,8 @@ export default defineComponent({
       });
     };
     return {
-      username, roomId, login,
+      authState,
+      login,
     };
   },
 });
