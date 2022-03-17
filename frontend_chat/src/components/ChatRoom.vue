@@ -1,15 +1,64 @@
 <template>
-  <ul>
-    <MessageComponent :name="'Misha'" :text="'Hello'" :owner="true"/>
-    <MessageComponent :name="'Masha'" :text="'Hello'" :owner="false"/>
-    <MessageComponent :name="'Misha'" :text="'Как дела?'" :owner="true"/>
-    <MessageComponent :name="'Masha'" :text="'Полнейший ад'" :owner="false"/>
-    <MessageComponent :name="'Masha'" :text="'Анна'" :owner="false"/>
-    <MessageComponent :name="'Masha'" :text="'Полнейший ***'" :owner="false"/>
-    <MessageComponent :name="'Misha'" :text="'Согласен'" :owner="true"/>
-    <MessageComponent :name="'Misha'" :text="'Да'" :owner="true"/>
-    <MessageComponent :name="'Игорь'" :text="'Тест'" :owner="false"/>
-  </ul>
+  <div class="chat-container">
+    <div class="users-list">
+      <h3>Список пользователей</h3>
+      <h5>Человек</h5>
+      <h5>Человек</h5>
+      <h5>Человек</h5>
+      <h5>Человек</h5>
+      <h5>Человек</h5>
+      <h5>Человек</h5>
+      <h5>Человек</h5>
+      <h5>Человек</h5>
+      <h5>Человек</h5>
+      <h5>Человек</h5>
+      <h5>Человек</h5>
+      <h5>Человек</h5>
+      <h5>Человек</h5>
+      <h5>Человек</h5>
+      <h5>Человек</h5>
+      <h5>Человек</h5>
+      <h5>Человек</h5>
+      <h5>Человек</h5>
+      <h5>Человек</h5>
+      <h5>Человек</h5>
+      <h5>Человек</h5>
+      <h5>Человек</h5>
+      <h5>Человек</h5>
+      <h5>Человек</h5>
+      <h5>Человек</h5>
+      <h5>Человек</h5>
+      <h5>Человек</h5>
+      <h5>Человек</h5>
+      <h5>Человек</h5>
+      <h5>Человек</h5>
+      <h5>Человек</h5>
+      <h5>Человек</h5>
+      <h5>Человек</h5>
+      <h5>Человек</h5>
+      <h5>Человек</h5>
+      <h5>Человек</h5>
+      <h5>Человек</h5>
+      <h5>Человек</h5>
+      <h5>Человек</h5>
+      <h5>Человек</h5>
+      <h5>Человек</h5>
+      <h5>Человек</h5>
+      <h5>Человек</h5>
+      <h5>Человек</h5>
+    </div>
+    <ul>
+      <MessageComponent :name="'Misha'" :text="'Hello'" :owner="true"/>
+      <MessageComponent :name="'Masha'" :text="'Hello'" :owner="false"/>
+      <MessageComponent :name="'Misha'" :text="'Как дела?'" :owner="true"/>
+      <MessageComponent :name="'Masha'" :text="'Полнейший ад'" :owner="false"/>
+      <MessageComponent :name="'Masha'" :text="'Анна'" :owner="false"/>
+      <MessageComponent :name="'Masha'" :text="'Полнейший ***'" :owner="false"/>
+      <MessageComponent :name="'Misha'" :text="'Согласен'" :owner="true"/>
+      <MessageComponent :name="'Misha'" :text="'Да'" :owner="true"/>
+      <MessageComponent :name="'Игорь'" :text="'Тест'" :owner="false"/>
+    </ul>
+  </div>
   <form>
     <input type="text" placeholder="Введите сообщение">
     <button type="button">Отправить</button>
@@ -43,16 +92,48 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-ul {
-  position: absolute;
-  margin-top: 0;
-  top: 0;
-  right: 0;
-  left: 0;
-  bottom: 80px;
-  padding: 1rem;
-  overflow-y: auto;
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  > .users-list {
+    position: absolute;
+    width: 20%;
+    height: 100%;
+    overflow-y: auto;
+    top: 0;
+    border-right: 1px solid #918c8c;
+
+    &::-webkit-scrollbar-track { border-radius: 4px; }
+    &::-webkit-scrollbar { width: 6px; }
+    &::-webkit-scrollbar-thumb { border-radius: 4px;background: #f0f2f5; }
+    &::-webkit-scrollbar-thumb { background: #6a7d9b; }
+
+    > h3 {
+      margin: 20px;
+    }
+    > h5 {
+      margin: 15px 20px;
+    }
+  }
+  > ul {
+    position: absolute;
+    margin-top: 0;
+    margin-left: 20%;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 80px;
+    padding: 1rem;
+    overflow-y: auto;
+
+    &::-webkit-scrollbar-track { border-radius: 4px; }
+    &::-webkit-scrollbar { width: 6px; }
+    &::-webkit-scrollbar-thumb { border-radius: 4px;background: #f0f2f5; }
+    &::-webkit-scrollbar-thumb { background: #6a7d9b; }
+  }
 }
+
 form {
   display:flex;
   flex-direction: row;
@@ -61,6 +142,8 @@ form {
   bottom: 0;
   left: 0;
   right: 0;
+  box-sizing: border-box;
+  margin-left: 20%;
   margin-bottom: 30px;
   > input {
     width: 80%;
