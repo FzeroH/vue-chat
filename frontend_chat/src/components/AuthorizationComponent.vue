@@ -11,17 +11,15 @@
 <script>
 import { defineComponent, ref } from 'vue';
 import io from 'socket.io-client';
-// eslint-disable-next-line import/no-cycle
-import router from '../router';
+import { useRouter } from '../router';
 
 export default defineComponent({
   name: 'AuthorizationComponent',
   setup() {
-    // eslint-disable-next-line
-    let username = ref('');
-    // eslint-disable-next-line
-    let roomId = ref('');
+    const username = ref('');
+    const roomId = ref('');
     const url = 'http://localhost:8080';
+    const router = useRouter();
     const socket = io(url, {
       reconnectionDelay: 5000,
     });
@@ -33,10 +31,12 @@ export default defineComponent({
       };
       socket.emit('login', userData, (data) => {
         if (typeof data === 'string') {
+          // eslint-disable-next-line no-console
           console.log(data);
         } else {
+          // eslint-disable-next-line no-console
           console.log(`Пользователь ${data.userId} вошёл в чат`);
-          router.push('/chat');
+          router.path('/chat');
         }
       });
     };
