@@ -1,62 +1,15 @@
 <template>
   <div class="chat-container">
     <div class="users-list">
+      <h2>Комната номер 123</h2>
       <h3>Список пользователей</h3>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
+      <h5 v-for="user in users" :key="user">{{user}}</h5>
     </div>
     <ul>
-      <MessageComponent :name="'Misha'" :text="'Hello'" :owner="true"/>
-      <MessageComponent :name="'Masha'" :text="'Hello'" :owner="false"/>
-      <MessageComponent :name="'Misha'" :text="'Как дела?'" :owner="true"/>
-      <MessageComponent :name="'Masha'" :text="'Полнейший ад'" :owner="false"/>
-      <MessageComponent :name="'Masha'" :text="'Анна'" :owner="false"/>
-      <MessageComponent :name="'Masha'" :text="'Полнейший ***'" :owner="false"/>
-      <MessageComponent :name="'Misha'" :text="'Согласен'" :owner="true"/>
-      <MessageComponent :name="'Misha'" :text="'Да'" :owner="true"/>
-      <MessageComponent :name="'Игорь'" :text="'Тест'" :owner="false"/>
+      <MessageComponent v-for="message in messages" :key="message.username"
+                        :username="message.username"
+                        :text="message.text"
+                        :owner="message.owner"/>
     </ul>
   </div>
   <form>
@@ -66,7 +19,7 @@
 </template>
 
 <script>
-import { defineComponent } from 'vue';
+import { defineComponent, onMounted, ref } from 'vue';
 import { io } from 'socket.io-client';
 import MessageComponent from './MessageComponent.vue';
 
@@ -75,17 +28,35 @@ export default defineComponent({
   components: { MessageComponent },
 
   setup() {
+    const messages = ref([/*
+      { username: 'admin', text: 'Hello', owner: true },
+      { username: 'Masha', text: 'Hello', owner: false },
+      { username: 'Misha', text: 'Как дела?', owner: true },
+      { username: 'Masha', text: 'Полнейший ад', owner: false },
+      { username: 'Masha', text: 'Анна', owner: false },
+      { username: 'Анна', text: 'Полнейший ***', owner: false },
+      { username: 'Misha', text: 'Согласен', owner: true },
+      { username: 'Misha', text: 'Да', owner: true },
+      { username: 'Игорь', text: 'Тест', owner: false }, */
+    ]);
+    const users = ref(['Миша', 'Саша', 'Олег', 'Игорь', 'Masha', 'Анна']);
     const url = 'http://localhost:8080';
-    const test = () => {
+    onMounted(() => {
       const socket = io(url, {
         reconnectionDelay: 5000,
       });
-      socket.on('test', (data) => {
+      socket.emit('createMessage', (data) => {
         // eslint-disable-next-line
         console.log(`Я вошёл!!!! ${data}`);
       });
-    };
-    return { test };
+      socket.on('newMessage', (data) => {
+        // eslint-disable-next-line
+        console.log(data);
+        // messages.value.push({ owner: true, text: 'Tratata', username: 'Olga' });
+      });
+      messages.value.push({ owner: true, text: 'Tratata', username: 'Olga' });
+    });
+    return { messages, users };
   },
 });
 </script>
@@ -108,7 +79,7 @@ export default defineComponent({
     &::-webkit-scrollbar-thumb { border-radius: 4px;background: #f0f2f5; }
     &::-webkit-scrollbar-thumb { background: #6a7d9b; }
 
-    > h3 {
+    > h2, h3 {
       margin: 20px;
     }
     > h5 {

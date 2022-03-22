@@ -35,7 +35,7 @@ export default defineComponent({
         } else {
           // eslint-disable-next-line no-console
           console.log(`Пользователь ${data.userId} вошёл в чат`);
-          router.path('/chat');
+          router.push('/chat');
         }
       });
     };

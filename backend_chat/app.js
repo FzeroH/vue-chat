@@ -50,14 +50,22 @@ server.listen(port)
 
 io.on('connection', (socket) => {
   console.log('a user connected');
-  socket.emit('test', 'Александр');
+  const messageObject = (username, text, id) => ({username, text, id});
+
   socket.on('login', (data, cb) => {
       if(!data.username || !data.roomId){
           return cb('Данные некорректны')
       }
-      cb({userId: socket.id})
-      console.log(`Пользователь ${data.username} вошёл в комнату ${data.roomId}`);
-  })
+      cb({userId: socket.id});
+      socket.emit('newMessage', (resp) => messageObject('admin',`Добро пожаловать ${data.username}`, '777') )
+  });
+  /*socket.on('createMessage', data => {
+      setTimeout(() =>{
+          socket.emit('newMessage', () => {
+              text: data.text
+          })
+      },500)
+  })*/
 });
 
 module.exports = app;

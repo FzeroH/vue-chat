@@ -1,12 +1,12 @@
 <template>
-  <div v-if="name === 'admin'" class="admin-message">
+  <div v-if="username === 'admin'" class="admin-message">
     <p>{{ text }}</p>
     <hr/>
   </div>
   <div v-else class="wrap">
     <div class="mess" :class="{ owner }">
       <small>
-        <strong>{{ name }}</strong>
+        <strong>{{ username }}</strong>
       </small>
       <p>{{ text }}</p>
     </div>
@@ -19,7 +19,7 @@ import { defineComponent } from 'vue';
 export default defineComponent({
   name: 'MessageComponent',
   props: {
-    name: String,
+    username: String,
     text: String,
     owner: {
       type: Boolean,
