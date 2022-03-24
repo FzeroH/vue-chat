@@ -1,62 +1,15 @@
 <template>
   <div class="chat-container">
     <div class="users-list">
+      <h2>Комната №123</h2>
       <h3>Список пользователей</h3>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
-      <h5>Человек</h5>
+      <h5 v-for="user in users" :key="user">{{user}}</h5>
     </div>
     <ul>
-      <MessageComponent :name="'Misha'" :text="'Hello'" :owner="true"/>
-      <MessageComponent :name="'Masha'" :text="'Hello'" :owner="false"/>
-      <MessageComponent :name="'Misha'" :text="'Как дела?'" :owner="true"/>
-      <MessageComponent :name="'Masha'" :text="'Полнейший ад'" :owner="false"/>
-      <MessageComponent :name="'Masha'" :text="'Анна'" :owner="false"/>
-      <MessageComponent :name="'Masha'" :text="'Полнейший ***'" :owner="false"/>
-      <MessageComponent :name="'Misha'" :text="'Согласен'" :owner="true"/>
-      <MessageComponent :name="'Misha'" :text="'Да'" :owner="true"/>
-      <MessageComponent :name="'Игорь'" :text="'Тест'" :owner="false"/>
+      <MessageComponent v-for="message in messages" :key="message.username"
+                        :username="message.username"
+                        :text="message.text"
+                        :owner="message.owner"/>
     </ul>
   </div>
   <form>
@@ -66,26 +19,32 @@
 </template>
 
 <script>
-import { defineComponent } from 'vue';
-import { io } from 'socket.io-client';
+import { defineComponent, ref, onMounted } from 'vue';
 import MessageComponent from './MessageComponent.vue';
+import { connectToChat } from '../../socket';
 
 export default defineComponent({
   name: 'ChatRoom',
   components: { MessageComponent },
 
   setup() {
-    const url = 'http://localhost:8080';
-    const test = () => {
-      const socket = io(url, {
-        reconnectionDelay: 5000,
-      });
-      socket.on('test', (data) => {
-        // eslint-disable-next-line
-        console.log(`Я вошёл!!!! ${data}`);
-      });
-    };
-    return { test };
+    const messages = ref([ /*
+      { username: 'admin', text: 'Hello', owner: true },
+      { username: 'Masha', text: 'Hello', owner: false },
+      { username: 'Misha', text: 'Как дела?', owner: true },
+      { username: 'Masha', text: 'Полнейший ад', owner: false },
+      { username: 'Masha', text: 'Анна', owner: false },
+      { username: 'Анна', text: 'Полнейший ***', owner: false },
+      { username: 'Misha', text: 'Согласен', owner: true },
+      { username: 'Misha', text: 'Да', owner: true },
+      { username: 'Игорь', text: 'Тест', owner: false }, */
+    ]);
+    const users = ref(['Миша', 'Саша', 'Олег', 'Игорь', 'Masha', 'Анна']);
+
+    onMounted(() => {
+      connectToChat(messages.value);
+    });
+    return { messages, users };
   },
 });
 </script>
@@ -108,7 +67,7 @@ export default defineComponent({
     &::-webkit-scrollbar-thumb { border-radius: 4px;background: #f0f2f5; }
     &::-webkit-scrollbar-thumb { background: #6a7d9b; }
 
-    > h3 {
+    > h2, h3 {
       margin: 20px;
     }
     > h5 {

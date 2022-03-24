@@ -47,16 +47,20 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 server.listen(port)
-
+const messageObject = (username, text, owner = false) => ({username, text, owner});
 io.on('connection', (socket) => {
   console.log('a user connected');
-  socket.emit('test', 'Александр');
   socket.on('login', (data, cb) => {
       if(!data.username || !data.roomId){
           return cb('Данные некорректны')
       }
       cb({userId: socket.id})
-      console.log(`Пользователь ${data.username} вошёл в комнату ${data.roomId}`);
+      socket.join(data.roomId)
+      socket.emit('authMessage', messageObject('admin',`Добро пожаловать, ${data.username}`))
+      socket.broadcast.to(data.roomId).emit('authMessage',messageObject(
+          'admin',
+          `Пользователь ${data.username} зашёл в комнату`)
+      )
   })
 });
 

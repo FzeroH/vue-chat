@@ -4,14 +4,14 @@
     <input type="text" id="user-name" v-model="authState.username">
     <label for="room-id">Номер комнаты</label>
     <input type="text" id="room-id" v-model="authState.roomId">
-    <button type="button" @click="login">Войти</button>
+    <button type="button" @click="auth">Войти</button>
   </form>
 </template>
 
 <script>
 import { defineComponent, ref } from 'vue';
-import io from 'socket.io-client';
 import { useRouter } from 'vue-router';
+import { login } from '../../socket';
 
 export default defineComponent({
   name: 'AuthorizationComponent',
@@ -20,28 +20,14 @@ export default defineComponent({
       username: '',
       roomId: '',
     });
-
-    const url = 'http://localhost:8080';
     const router = useRouter();
-    const socket = io(url, {
-      reconnectionDelay: 5000,
-    });
-    // eslint-disable-next-line no-shadow
-    const login = () => {
-      socket.emit('login', authState.value, (data) => {
-        if (typeof data === 'string') {
-          // eslint-disable-next-line no-console
-          console.log(data);
-        } else {
-          // eslint-disable-next-line no-console
-          console.log(`Пользователь ${data.userId} вошёл в чат`);
-          router.path('/chat');
-        }
-      });
+    const auth = () => {
+      login(authState.value);
+      router.push('/chat');
     };
     return {
       authState,
-      login,
+      auth,
     };
   },
 });
