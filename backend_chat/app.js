@@ -1,7 +1,7 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-const users = require('./user')();
+const users = require('./users')();
 const app = express();
 
 let http = require('http');
@@ -26,6 +26,7 @@ const messageObject = (username, text, userId) => ({ username, text, userId });
 
 io.on('connection', (socket) => {
     console.log('a user connected');
+
     socket.on('login', (data, cb) => {
         if(!data.username || !data.roomId){
             return cb('Данные некорректны')
@@ -38,20 +39,24 @@ io.on('connection', (socket) => {
             username: data.username,
             room: data.roomId
         })
-        socket.emit('getUserList', users)
-        /* socket.on('setUserId', (data) => {
-            console.log(data);
-            // socket.emit('getUserData', users.getUser(data))
-        }) */
-        socket.emit('newMessage', messageObject(
+
+        socket.emit('getUserList', users.getByRoom(data.roomId))
+        socket.on('setUserId', (userId) => {
+            console.log(userId);
+            socket.emit('getUserData', users.getUser(userId))
+        })
+
+        socket.emit('authMessage', messageObject(
             'admin',
             `Добро пожаловать, ${data.username}`,
             socket.id));
-        socket.broadcast.to(data.roomId).emit('newMessage',messageObject(
+
+        socket.broadcast.to(data.roomId).emit('authMessage',messageObject(
             'admin',
             `Пользователь ${data.username} зашёл в комнату`)
         );
       });
+
     socket.on('createMessage', (data) =>{
         if(!data.text) {
             console.error('Текстовое поле не может быть пустым')
@@ -61,7 +66,6 @@ io.on('connection', (socket) => {
             io.to(user.room).emit('newMessage',messageObject(user.username,data.text,data.userId))
             console.log(data);
         }
-        //console.log(data);
     });
 });
 

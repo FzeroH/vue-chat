@@ -26,3 +26,24 @@ export const connectToChat = (messages = []) => {
     messages.push(resp);
   });
 };
+
+export const createMessage = (message, messages) => {
+  socket.emit('createMessage', ({
+    text: message,
+    userId: socket.id,
+  }));
+
+  socket.off('newMessage');
+
+  socket.on('newMessage', (data) => {
+    messages.push(data);
+  });
+};
+
+export const getUserData = () => {
+  socket.emit('setUserId', socket.id);
+  socket.once('getUserData', (data) => {
+    // eslint-disable-next-line no-console
+    console.log(data);
+  });
+};
