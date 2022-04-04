@@ -1,7 +1,7 @@
 <template>
   <div class="chat-container">
     <div class="users-list">
-      <h2>Комната №123</h2>
+      <h2>Комната {{ room }}</h2>
       <h3>Список пользователей</h3>
       <h5 v-for="user in users" :key="user">{{user}}</h5>
     </div>
@@ -9,42 +9,44 @@
       <MessageComponent v-for="message in messages" :key="message.username"
                         :username="message.username"
                         :text="message.text"
-                        :owner="message.owner"/>
+                        :owner="true"/> <!--message.id === user.id -->
     </ul>
   </div>
-  <form>
-    <input type="text" placeholder="Введите сообщение">
-    <button type="button">Отправить</button>
+  <form @keydown.enter.prevent="createNewMessage">
+    <textarea placeholder="Введите сообщение" v-model="newMessage"/>
+    <button type="button" @click="createNewMessage">Отправить</button>
   </form>
 </template>
 
 <script>
 import { defineComponent, ref, onMounted } from 'vue';
 import MessageComponent from './MessageComponent.vue';
-import { connectToChat } from '../../socket';
+import { connectToChat, createMessage, getUserData } from '../../socket';
 
 export default defineComponent({
   name: 'ChatRoom',
   components: { MessageComponent },
 
   setup() {
-    const messages = ref([ /*
-      { username: 'admin', text: 'Hello', owner: true },
-      { username: 'Masha', text: 'Hello', owner: false },
-      { username: 'Misha', text: 'Как дела?', owner: true },
-      { username: 'Masha', text: 'Полнейший ад', owner: false },
-      { username: 'Masha', text: 'Анна', owner: false },
-      { username: 'Анна', text: 'Полнейший ***', owner: false },
-      { username: 'Misha', text: 'Согласен', owner: true },
-      { username: 'Misha', text: 'Да', owner: true },
-      { username: 'Игорь', text: 'Тест', owner: false }, */
-    ]);
-    const users = ref(['Миша', 'Саша', 'Олег', 'Игорь', 'Masha', 'Анна']);
+    const messages = ref([]);
+    const users = ref([]);
+    const room = ref('test');
+    const newMessage = ref('');
+    const userData = {};
+
+    const createNewMessage = () => {
+      createMessage(newMessage.value, messages.value);
+      newMessage.value = '';
+    };
 
     onMounted(() => {
       connectToChat(messages.value);
+      getUserData();
     });
-    return { messages, users };
+
+    return {
+      messages, users, room, newMessage, userData, createNewMessage,
+    };
   },
 });
 </script>
@@ -103,8 +105,12 @@ form {
   box-sizing: border-box;
   margin-left: 20%;
   margin-bottom: 30px;
-  > input {
+  > textarea {
     width: 80%;
+    height: 20px;
+    overflow:hidden;
+    resize: none;
+    word-wrap: break-word;
     margin-left: 5px;
     padding: 4px 8px;
     font-size: 18px;
