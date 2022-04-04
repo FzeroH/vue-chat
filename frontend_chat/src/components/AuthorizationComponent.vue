@@ -23,7 +23,7 @@ export default defineComponent({
     const router = useRouter();
     const auth = () => {
       login(authState.value);
-      router.push('/chat');
+      router.push({ path: '/chat', query: { room: authState.value.roomId } });
     };
     return {
       authState,
