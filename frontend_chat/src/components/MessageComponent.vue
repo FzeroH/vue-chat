@@ -48,6 +48,7 @@ export default defineComponent({
 
   > .mess {
     width: 30%;
+    word-wrap: break-word;
     margin-bottom: 20px;
     padding: 10px 5px 5px 10px;
     box-shadow: 0 1px 0 0 rgba(50, 50, 50, 0.3);
@@ -59,6 +60,7 @@ export default defineComponent({
 
   > .owner{
     background: dodgerblue;
+    word-wrap: break-word;
     color: white;
     border-radius: 10px;
     width: 30%;
