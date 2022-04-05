@@ -9,11 +9,11 @@
       <MessageComponent v-for="message in messages" :key="message.username"
                         :username="message.username"
                         :text="message.text"
-                        :owner="true"/> <!--message.id === user.id -->
+                        :owner="message.userId === userData.id"/>
     </ul>
   </div>
   <form @keydown.enter.prevent="createNewMessage">
-    <textarea placeholder="Введите сообщение" v-model="newMessage"/>
+    <input type="text" placeholder="Введите сообщение" v-model="newMessage"/>
     <button type="button" @click="createNewMessage">Отправить</button>
   </form>
 </template>
@@ -32,7 +32,7 @@ export default defineComponent({
     const users = ref([]);
     const room = ref('test');
     const newMessage = ref('');
-    const userData = {};
+    const userData = ref({});
 
     const createNewMessage = () => {
       createMessage(newMessage.value, messages.value);
@@ -41,7 +41,7 @@ export default defineComponent({
 
     onMounted(() => {
       connectToChat(messages.value);
-      getUserData();
+      userData.value = getUserData();
     });
 
     return {
@@ -105,12 +105,8 @@ form {
   box-sizing: border-box;
   margin-left: 20%;
   margin-bottom: 30px;
-  > textarea {
+  > input {
     width: 80%;
-    height: 20px;
-    overflow:hidden;
-    resize: none;
-    word-wrap: break-word;
     margin-left: 5px;
     padding: 4px 8px;
     font-size: 18px;

@@ -21,8 +21,6 @@ export const login = (authState) => {
 
 export const connectToChat = (messages = []) => {
   socket.on('authMessage', (resp) => {
-    // eslint-disable-next-line
-    console.log(`Я вошёл!!!! ${resp.username} \n${resp.text}`);
     messages.push(resp);
   });
 };
@@ -42,8 +40,5 @@ export const createMessage = (message, messages) => {
 
 export const getUserData = () => {
   socket.emit('setUserId', socket.id);
-  socket.once('getUserData', (data) => {
-    // eslint-disable-next-line no-console
-    console.log(data);
-  });
+  return socket.once('getUserData', (data) => data);
 };

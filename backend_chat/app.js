@@ -35,14 +35,13 @@ io.on('connection', (socket) => {
         socket.join(data.roomId)
         users.removeUser(socket.id)
         users.addUser({
-            id: socket.id,
+            userId: socket.id,
             username: data.username,
             room: data.roomId
         })
 
         socket.emit('getUserList', users.getByRoom(data.roomId))
         socket.on('setUserId', (userId) => {
-            console.log(userId);
             socket.emit('getUserData', users.getUser(userId))
         })
 
